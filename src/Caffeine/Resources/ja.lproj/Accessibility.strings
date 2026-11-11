@@ -6,3 +6,6 @@
 
 /* Accessibility value announced when Caffeine is not preventing sleep */
 "Inactive, sleep allowed" = "非アクティブ、スリープ許可";
+
+/* Accessibility value announced when Super Caffeine is preventing lid-closed sleep */
+"Super active, sleep prevented even with the lid closed" = "Super 有効、蓋を閉じてもスリープを防止";

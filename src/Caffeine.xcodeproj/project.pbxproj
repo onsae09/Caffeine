@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F23FEFAF2F9623DB00C445B2 /* DZFoundation in Embed Frameworks */ = {isa = PBXBuildFile; productRef = F2634EAA2F375A5200C56D92 /* DZFoundation */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		F26346032F27633300C56D92 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = F26346022F27633300C56D92 /* Sparkle */; };
 		F2634EAB2F375A5200C56D92 /* DZFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = F2634EAA2F375A5200C56D92 /* DZFoundation */; };
 /* End PBXBuildFile section */
 
@@ -56,7 +55,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F26346032F27633300C56D92 /* Sparkle in Frameworks */,
 				F2634EAB2F375A5200C56D92 /* DZFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,7 +99,6 @@
 			);
 			name = Caffeine;
 			packageProductDependencies = (
-				F26346022F27633300C56D92 /* Sparkle */,
 				F2634EAA2F375A5200C56D92 /* DZFoundation */,
 			);
 			productName = Caffeine;
@@ -145,7 +142,6 @@
 			mainGroup = F2F53B9B2EC354AE008A08B6;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F26346012F27633300C56D92 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				F2634EA92F375A5200C56D92 /* XCRemoteSwiftPackageReference "DZFoundation" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -214,7 +210,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 568T6RKXH7;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -278,7 +274,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 568T6RKXH7;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -304,12 +300,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Icon;
 				CODE_SIGN_ENTITLEMENTS = Caffeine/Resources/Caffeine.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 30;
-				DEVELOPMENT_TEAM = 568T6RKXH7;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -339,12 +336,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Icon;
 				CODE_SIGN_ENTITLEMENTS = Caffeine/Resources/Caffeine.entitlements;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 30;
-				DEVELOPMENT_TEAM = 568T6RKXH7;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -393,14 +391,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F26346012F27633300C56D92 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sparkle-project/Sparkle";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.8.1;
-			};
-		};
 		F2634EA92F375A5200C56D92 /* XCRemoteSwiftPackageReference "DZFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/domzilla/DZFoundation";
@@ -412,11 +402,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F26346022F27633300C56D92 /* Sparkle */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F26346012F27633300C56D92 /* XCRemoteSwiftPackageReference "Sparkle" */;
-			productName = Sparkle;
-		};
 		F2634EAA2F375A5200C56D92 /* DZFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F2634EA92F375A5200C56D92 /* XCRemoteSwiftPackageReference "DZFoundation" */;

@@ -3,6 +3,59 @@
 # Caffeine
 ### Don't let your Mac fall asleep.
 
+> **이 저장소는 [domzilla/Caffeine](https://github.com/domzilla/Caffeine)의 포크입니다.** 원본에 아래 변경 사항이 추가되었습니다.
+
+## 포크 변경 사항
+
+### Super Caffeine — 덮개를 닫아도 잠자기 안 함
+
+메뉴바 아이콘을 클릭하면 세 단계를 순환합니다.
+
+| 상태 | 아이콘 | 동작 |
+| --- | --- | --- |
+| 꺼짐 | 빈 컵 | 평소처럼 잠자기 |
+| 켜짐 | 찬 컵 | 자동 잠자기·화면 꺼짐 방지 (원본 동작) |
+| **Super** | 찬 컵 + ⚡ | 위 동작 + **덮개를 닫아도 잠자기 안 함** (`pmset -a disablesleep 1`) |
+
+- Super를 끄거나, 앱을 종료하거나, 설정한 시간이 끝나면 `pmset -a disablesleep 0`으로 되돌립니다.
+- 앱 시작 시 시스템에 이미 `SleepDisabled 1`이 설정되어 있으면 Super 상태로 시작합니다.
+- 우클릭 메뉴의 **Super Caffeine (덮개를 닫아도 유지)** 항목으로도 켜고 끌 수 있습니다.
+- `pmset`은 root 권한이 필요합니다. 먼저 비밀번호 없는 `sudo -n`을 시도하고, 실패하면 관리자 비밀번호 창을 띄웁니다. 비밀번호 창에서 취소하면 Super를 건너뛰고 꺼짐으로 넘어갑니다.
+
+#### 비밀번호 없이 쓰기 (선택)
+
+아래 두 명령만 비밀번호 없이 허용하는 sudoers 규칙을 추가하면 비밀번호 창이 뜨지 않습니다.
+
+```sh
+echo "$(whoami) ALL=(root) NOPASSWD: /usr/bin/pmset -a disablesleep 0, /usr/bin/pmset -a disablesleep 1" > /tmp/caffeine-sudoers
+visudo -c -f /tmp/caffeine-sudoers && sudo install -m 0440 -o root -g wheel /tmp/caffeine-sudoers /etc/sudoers.d/caffeine
+```
+
+제거하려면 `sudo rm /etc/sudoers.d/caffeine`를 실행하세요.
+
+> ⚠️ 덮개를 닫은 채 가방에 넣으면 발열과 배터리 소모가 커질 수 있습니다. 필요할 때만 사용하세요.
+
+### 기타 변경
+
+- **App Sandbox 비활성화**: 샌드박스 안에서는 `pmset`을 관리자 권한으로 실행할 수 없기 때문입니다. 따라서 App Store 배포용이 아닙니다.
+- **자동 업데이트(Sparkle) 제거**: 원본 업데이트가 이 포크를 덮어쓰지 않도록 Sparkle 패키지와 "업데이트 확인..." 메뉴를 제거했습니다.
+- **로컬 서명**: "Sign to Run Locally"(ad-hoc)로 빌드하도록 바꾸고 Hardened Runtime을 껐습니다. ad-hoc 서명으로는 Hardened Runtime의 라이브러리 검증을 통과할 수 없어 앱이 바로 종료되기 때문입니다.
+- 새 문구는 13개 언어 모두 번역했습니다.
+
+### 빌드 및 설치
+
+```sh
+xcodebuild -project src/Caffeine.xcodeproj -scheme Caffeine -configuration Release \
+  -destination "platform=macOS" -derivedDataPath build build
+rm -rf /Applications/Caffeine.app
+ditto build/Build/Products/Release/Caffeine.app /Applications/Caffeine.app
+open /Applications/Caffeine.app
+```
+
+---
+
+## 원본 README
+
 Caffeine is a tiny program that keeps your Mac awake, useful for ensuring that long running tasks aren't interrupted by your computer going to sleep.
 
 ### Installation

@@ -6,3 +6,6 @@
 
 /* Accessibility value announced when Caffeine is not preventing sleep */
 "Inactive, sleep allowed" = "Inactivo, reposo permitido";
+
+/* Accessibility value announced when Super Caffeine is preventing lid-closed sleep */
+"Super active, sleep prevented even with the lid closed" = "Super activo, reposo impedido incluso con la tapa cerrada";

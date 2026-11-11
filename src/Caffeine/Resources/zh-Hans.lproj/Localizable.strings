@@ -15,7 +15,6 @@
 "%d seconds" = "%d秒";
 
 /* Menu items */
-"Check for Updates..." = "检查更新...";
 "Preferences..." = "偏好设置...";
 "About Caffeine" = "关于Caffeine";
 "Quit" = "退出";
@@ -43,3 +42,8 @@
 /* System messages */
 "Caffeine prevents sleep" = "Caffeine 会阻止睡眠";
 
+
+/* Super Caffeine */
+"Super Caffeine (lid can be closed)" = "Super Caffeine（可合上盖子）";
+"Super Caffeine is active (lid can be closed)" = "Super Caffeine 已激活（可合上盖子）";
+"Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine 需要管理员权限才能更改合盖睡眠设置。";

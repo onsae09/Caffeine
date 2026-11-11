@@ -15,7 +15,6 @@
 "%d seconds" = "%d segundos";
 
 /* Menu items */
-"Check for Updates..." = "Procurar atualizações...";
 "Preferences..." = "Preferências...";
 "About Caffeine" = "Sobre o Caffeine";
 "Quit" = "Sair";
@@ -42,3 +41,8 @@
 
 /* System messages */
 "Caffeine prevents sleep" = "O Caffeine impede o repouso";
+
+/* Super Caffeine */
+"Super Caffeine (lid can be closed)" = "Super Caffeine (pode fechar a tampa)";
+"Super Caffeine is active (lid can be closed)" = "Super Caffeine está ativo (pode fechar a tampa)";
+"Caffeine needs administrator privileges to change lid-closed sleep." = "O Caffeine precisa de privilégios de administrador para alterar a suspensão com a tampa fechada.";

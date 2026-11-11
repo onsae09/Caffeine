@@ -7,7 +7,6 @@
 
 import Cocoa
 import Combine
-import Sparkle
 import SwiftUI
 
 @MainActor
@@ -16,10 +15,8 @@ class MenuBarController: NSObject {
     private var viewModel: CaffeineViewModel
     private var preferencesWindow: NSWindow?
     private var cancellables = Set<AnyCancellable>()
-    private let updaterController: SPUStandardUpdaterController
 
-    init(updaterController: SPUStandardUpdaterController) {
-        self.updaterController = updaterController
+    override init() {
         self.viewModel = CaffeineViewModel()
         super.init()
         self.setupMenuBar()
@@ -53,6 +50,7 @@ class MenuBarController: NSObject {
 
     private func setupObservers() {
         self.viewModel.$isActive
+            .combineLatest(self.viewModel.$isSuperActive)
             .sink { [weak self] _ in
                 guard let self else { return }
                 DispatchQueue.main.async {
@@ -73,12 +71,22 @@ class MenuBarController: NSObject {
     private func updateIcon() {
         guard let button = statusItem?.button else { return }
 
-        let imageName = self.viewModel.isActive ? "active" : "inactive"
-        if let image = NSImage(named: NSImage.Name(imageName)) {
-            button.image = image
+        if self.viewModel.isSuperActive {
+            button.image = Self.superActiveImage
+        } else {
+            let imageName = self.viewModel.isActive ? "active" : "inactive"
+            if let image = NSImage(named: NSImage.Name(imageName)) {
+                button.image = image
+            }
         }
 
-        if self.viewModel.isActive {
+        if self.viewModel.isSuperActive {
+            button.setAccessibilityValue(NSLocalizedString(
+                "Super active, sleep prevented even with the lid closed",
+                tableName: "Accessibility",
+                comment: "Accessibility value announced when Super Caffeine is preventing lid-closed sleep"
+            ))
+        } else if self.viewModel.isActive {
             button.setAccessibilityValue(NSLocalizedString(
                 "Active, sleep prevented",
                 tableName: "Accessibility",
@@ -92,6 +100,32 @@ class MenuBarController: NSObject {
             ))
         }
     }
+
+    /// Full coffee cup with a lightning bolt next to it, used for Super Caffeine
+    private static let superActiveImage: NSImage? = {
+        guard let cup = NSImage(named: NSImage.Name("active")) else { return nil }
+
+        let boltConfig = NSImage.SymbolConfiguration(pointSize: 11, weight: .bold)
+        let bolt = NSImage(systemSymbolName: "bolt.fill", accessibilityDescription: nil)?
+            .withSymbolConfiguration(boltConfig)
+
+        let boltSize = bolt?.size ?? .zero
+        let size = NSSize(width: cup.size.width + boltSize.width + 1, height: cup.size.height)
+
+        let image = NSImage(size: size, flipped: false) { _ in
+            cup.draw(in: NSRect(origin: .zero, size: cup.size))
+            if let bolt {
+                let origin = NSPoint(
+                    x: cup.size.width + 1,
+                    y: (size.height - boltSize.height) / 2
+                )
+                bolt.draw(in: NSRect(origin: origin, size: boltSize))
+            }
+            return true
+        }
+        image.isTemplate = true
+        return image
+    }()
 
     @objc
     private func statusItemClicked(_: NSStatusBarButton) {
@@ -163,6 +197,17 @@ class MenuBarController: NSObject {
         activateForItem.submenu = submenu
         menu.addItem(activateForItem)
 
+        // Super Caffeine (keeps the Mac awake with the lid closed)
+        let superItem = NSMenuItem(
+            title: String(localized: "Super Caffeine (lid can be closed)"),
+            action: #selector(toggleSuper(_:)),
+            keyEquivalent: ""
+        )
+        superItem.target = self
+        superItem.state = self.viewModel.isSuperActive ? .on : .off
+        superItem.setAccessibilityIdentifier("MenuBarController.superCaffeineMenuItem")
+        menu.addItem(superItem)
+
         menu.addItem(NSMenuItem.separator())
 
         // Preferences
@@ -184,16 +229,6 @@ class MenuBarController: NSObject {
         aboutItem.target = self
         aboutItem.setAccessibilityIdentifier("MenuBarController.aboutMenuItem")
         menu.addItem(aboutItem)
-
-        // Update
-        let updatesItem = NSMenuItem(
-            title: String(localized: "Check for Updates..."),
-            action: #selector(checkForUpdates(_:)),
-            keyEquivalent: ""
-        )
-        updatesItem.target = self
-        updatesItem.setAccessibilityIdentifier("MenuBarController.checkForUpdatesMenuItem")
-        menu.addItem(updatesItem)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -220,13 +255,13 @@ class MenuBarController: NSObject {
     }
 
     @objc
-    private func showPreferences(_: Any?) {
-        self.showPreferencesWindow()
+    private func toggleSuper(_: NSMenuItem) {
+        self.viewModel.toggleSuper()
     }
 
     @objc
-    private func checkForUpdates(_ sender: Any?) {
-        self.updaterController.checkForUpdates(sender)
+    private func showPreferences(_: Any?) {
+        self.showPreferencesWindow()
     }
 
     private func showPreferencesWindow() {

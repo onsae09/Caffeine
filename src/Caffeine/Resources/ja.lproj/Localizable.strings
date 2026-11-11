@@ -15,7 +15,6 @@
 "%d seconds" = "%d秒";
 
 /* Menu items */
-"Check for Updates..." = "アップデートを確認...";
 "Preferences..." = "環境設定...";
 "About Caffeine" = "Caffeineについて";
 "Quit" = "終了";
@@ -43,3 +42,8 @@
 /* System messages */
 "Caffeine prevents sleep" = "Caffeine がスリープを防ぎます";
 
+
+/* Super Caffeine */
+"Super Caffeine (lid can be closed)" = "Super Caffeine（蓋を閉じても維持）";
+"Super Caffeine is active (lid can be closed)" = "Super Caffeine が有効です（蓋を閉じても維持）";
+"Caffeine needs administrator privileges to change lid-closed sleep." = "蓋を閉じたときのスリープ設定を変更するには管理者権限が必要です。";

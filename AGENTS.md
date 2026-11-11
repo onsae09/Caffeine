@@ -12,7 +12,6 @@ macOS menu bar app that prevents your Mac from sleeping.
 
 ## Dependencies
 - **DZFoundation** (Swift package)
-- **Sparkle** (Swift package) — auto-updates
 
 ## Guides (MANDATORY)
 Read `~/Agents/Guides/xcode-project-guide.md` in full before planning or editing anything.

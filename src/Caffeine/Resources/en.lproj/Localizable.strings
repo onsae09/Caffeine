@@ -15,7 +15,6 @@
 "%d seconds" = "%d seconds";
 
 /* Menu items */
-"Check for Updates..." = "Check for Updates...";
 "Preferences..." = "Preferences...";
 "About Caffeine" = "About Caffeine";
 "Quit" = "Quit";
@@ -43,3 +42,8 @@
 /* System messages */
 "Caffeine prevents sleep" = "Caffeine prevents sleep";
 
+
+/* Super Caffeine */
+"Super Caffeine (lid can be closed)" = "Super Caffeine (lid can be closed)";
+"Super Caffeine is active (lid can be closed)" = "Super Caffeine is active (lid can be closed)";
+"Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine needs administrator privileges to change lid-closed sleep.";

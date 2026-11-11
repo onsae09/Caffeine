@@ -15,6 +15,8 @@ class CaffeineViewModel: ObservableObject {
     // MARK: - Published Properties
 
     @Published var isActive = false
+    /// Super Caffeine: also keeps the Mac awake with the lid closed (`pmset disablesleep 1`)
+    @Published var isSuperActive = false
     @Published var timeRemaining: TimeInterval?
     @Published var showPreferences = false
 
@@ -33,8 +35,12 @@ class CaffeineViewModel: ObservableObject {
 
         self.setupObservers()
 
-        // Check if we should activate at launch
-        if UserDefaults.standard.bool(forKey: PreferenceKeys.activateAtLaunch) {
+        // Reflect a lid-closed sleep override left over from a previous session (or set manually)
+        if LidSleepManager.shared.isSleepDisabled() {
+            self.activate(withTimeout: 0)
+            self.isSuperActive = true
+        } else if UserDefaults.standard.bool(forKey: PreferenceKeys.activateAtLaunch) {
+            // Check if we should activate at launch
             self.activate()
         }
 
@@ -46,13 +52,47 @@ class CaffeineViewModel: ObservableObject {
 
     // MARK: - Public Methods
 
-    /// Toggles the active state
+    /// Cycles through the states: inactive → active → super active → inactive
     func toggleActive() {
-        if self.isActive {
-            self.deactivate()
-        } else {
+        if !self.isActive {
             self.activate()
+        } else if !self.isSuperActive {
+            // If the password prompt is cancelled, continue the cycle to inactive
+            if !self.activateSuper() {
+                self.deactivate()
+            }
+        } else {
+            self.deactivate()
         }
+    }
+
+    /// Switches between normal and super mode while staying active
+    func toggleSuper() {
+        if self.isSuperActive {
+            self.deactivateSuper()
+        } else {
+            if !self.isActive {
+                self.activate()
+            }
+            self.activateSuper()
+        }
+    }
+
+    /// Enables sleep prevention with the lid closed. Returns `true` on success.
+    @discardableResult
+    func activateSuper() -> Bool {
+        guard LidSleepManager.shared.setSleepDisabled(true) else { return false }
+        self.isSuperActive = true
+        return true
+    }
+
+    /// Restores normal lid-closed sleep. Returns `true` on success.
+    @discardableResult
+    func deactivateSuper() -> Bool {
+        guard self.isSuperActive else { return true }
+        guard LidSleepManager.shared.setSleepDisabled(false) else { return false }
+        self.isSuperActive = false
+        return true
     }
 
     /// Activates Caffeine with optional timeout
@@ -117,6 +157,9 @@ class CaffeineViewModel: ObservableObject {
 
     /// Deactivates Caffeine
     func deactivate() {
+        // Stay active if the system flag could not be restored, so the UI matches reality
+        guard self.deactivateSuper() else { return }
+
         self.cancelTimers()
         self.timeRemaining = nil
         self.isActive = false
@@ -165,6 +208,9 @@ class CaffeineViewModel: ObservableObject {
         }
 
         // Active with no timer (indefinite)
+        if self.isSuperActive {
+            return String(localized: "Super Caffeine is active (lid can be closed)")
+        }
         return String(localized: "Caffeine is active")
     }
 

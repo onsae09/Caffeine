@@ -15,7 +15,6 @@
 "%d seconds" = "%d секунд";
 
 /* Menu items */
-"Check for Updates..." = "Перевірити оновлення...";
 "Preferences..." = "Налаштування...";
 "About Caffeine" = "Про Caffeine";
 "Quit" = "Завершити";
@@ -43,3 +42,8 @@
 /* System messages */
 "Caffeine prevents sleep" = "Caffeine запобігає переходу в режим сну";
 
+
+/* Super Caffeine */
+"Super Caffeine (lid can be closed)" = "Super Caffeine (можна закрити кришку)";
+"Super Caffeine is active (lid can be closed)" = "Super Caffeine активний (можна закрити кришку)";
+"Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine потребує прав адміністратора, щоб змінити режим сну при закритій кришці.";
