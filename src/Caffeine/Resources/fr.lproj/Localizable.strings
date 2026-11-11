@@ -46,7 +46,11 @@
 /* Super Caffeine */
 "Super Caffeine (lid can be closed)" = "Super Caffeine (écran rabattable)";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine est actif (écran rabattable)";
-"Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine a besoin des privilèges administrateur pour modifier la veille écran rabattu.";
 "Turn off Super Caffeine at battery level:" = "Désactiver Super Caffeine à un niveau de batterie de :";
 "Never" = "Jamais";
 "While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "Sur batterie, Super Caffeine repasse en Caffeine normal à ce niveau ou en dessous.";
+"Super Caffeine is unavailable" = "Super Caffeine n’est pas disponible";
+"The battery is at or below %d%%. Connect a power adapter or change the battery level in Preferences." = "La batterie est à %d%% ou moins. Branchez un adaptateur secteur ou modifiez le niveau de batterie dans les Préférences.";
+"Caffeine needs permission to run pmset without a password. Run this command once in Terminal, then try again:" = "Caffeine a besoin de l’autorisation d’exécuter pmset sans mot de passe. Exécutez cette commande une fois dans Terminal, puis réessayez :";
+"Copy Command" = "Copier la commande";
+"OK" = "OK";

@@ -45,7 +45,11 @@
 /* Super Caffeine */
 "Super Caffeine (lid can be closed)" = "Super Caffeine (deksel mag dicht)";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine is actief (deksel mag dicht)";
-"Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine heeft beheerdersrechten nodig om sluimer met gesloten deksel te wijzigen.";
 "Turn off Super Caffeine at battery level:" = "Super Caffeine uitschakelen bij batterijniveau:";
 "Never" = "Nooit";
 "While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "Op batterijstroom schakelt Super Caffeine bij dit niveau of lager terug naar normale Caffeine.";
+"Super Caffeine is unavailable" = "Super Caffeine is niet beschikbaar";
+"The battery is at or below %d%%. Connect a power adapter or change the battery level in Preferences." = "De batterij staat op %d%% of lager. Sluit een netadapter aan of wijzig het batterijniveau in Voorkeuren.";
+"Caffeine needs permission to run pmset without a password. Run this command once in Terminal, then try again:" = "Caffeine heeft toestemming nodig om pmset zonder wachtwoord uit te voeren. Voer deze opdracht één keer uit in Terminal en probeer het opnieuw:";
+"Copy Command" = "Kopieer opdracht";
+"OK" = "OK";

@@ -46,7 +46,11 @@
 /* Super Caffeine */
 "Super Caffeine (lid can be closed)" = "Super Caffeine（蓋を閉じても維持）";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine が有効です（蓋を閉じても維持）";
-"Caffeine needs administrator privileges to change lid-closed sleep." = "蓋を閉じたときのスリープ設定を変更するには管理者権限が必要です。";
 "Turn off Super Caffeine at battery level:" = "Super Caffeine をオフにするバッテリー残量:";
 "Never" = "しない";
 "While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "バッテリー駆動中に残量がこの値以下になると、Super Caffeine は通常の Caffeine に戻ります。";
+"Super Caffeine is unavailable" = "Super Caffeine は使用できません";
+"The battery is at or below %d%%. Connect a power adapter or change the battery level in Preferences." = "バッテリー残量が %d%% 以下です。電源アダプタを接続するか、環境設定でバッテリー残量の値を変更してください。";
+"Caffeine needs permission to run pmset without a password. Run this command once in Terminal, then try again:" = "Caffeine がパスワードなしで pmset を実行するには許可が必要です。ターミナルで次のコマンドを一度実行してから、もう一度お試しください:";
+"Copy Command" = "コマンドをコピー";
+"OK" = "OK";

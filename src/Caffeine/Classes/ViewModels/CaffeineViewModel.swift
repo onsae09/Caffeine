@@ -22,6 +22,8 @@ class CaffeineViewModel: ObservableObject {
             self.updateBatteryMonitoring()
         }
     }
+    /// Set when Super Caffeine could not be switched on or off; the UI shows it and resets it to `nil`
+    @Published var superFailure: SuperCaffeineFailure?
     @Published var timeRemaining: TimeInterval?
     @Published var showPreferences = false
 
@@ -43,6 +45,8 @@ class CaffeineViewModel: ObservableObject {
         // Reflect a lid-closed sleep override left over from a previous session (or set manually)
         if LidSleepManager.shared.isSleepDisabled() {
             self.activate(withTimeout: 0)
+            // didSet runs here too (this @Published property is assigned after init's first phase),
+            // so the battery guard starts for a Super session restored at launch
             self.isSuperActive = true
         } else if UserDefaults.standard.bool(forKey: PreferenceKeys.activateAtLaunch) {
             // Check if we should activate at launch
@@ -62,7 +66,7 @@ class CaffeineViewModel: ObservableObject {
         if !self.isActive {
             self.activate()
         } else if !self.isSuperActive {
-            // If the password prompt is cancelled, continue the cycle to inactive
+            // If Super is unavailable (the failure is shown to the user), continue the cycle to inactive
             if !self.activateSuper() {
                 self.deactivate()
             }
@@ -76,10 +80,13 @@ class CaffeineViewModel: ObservableObject {
         if self.isSuperActive {
             self.deactivateSuper()
         } else {
-            if !self.isActive {
+            let wasActive = self.isActive
+            if !wasActive {
                 self.activate()
             }
-            self.activateSuper()
+            if !self.activateSuper(), !wasActive {
+                self.deactivate()
+            }
         }
     }
 
@@ -87,9 +94,14 @@ class CaffeineViewModel: ObservableObject {
     @discardableResult
     func activateSuper() -> Bool {
         // Don't keep a closed-lid Mac awake on a nearly empty battery
-        guard
-            !BatteryMonitor.shared.isLowOnBattery,
-            LidSleepManager.shared.setSleepDisabled(true) else { return false }
+        guard !BatteryMonitor.shared.isLowOnBattery else {
+            self.superFailure = .lowBattery(threshold: BatteryMonitor.lowBatteryThreshold)
+            return false
+        }
+        guard LidSleepManager.shared.setSleepDisabled(true) else {
+            self.superFailure = .notAuthorized
+            return false
+        }
         self.isSuperActive = true
         return true
     }
@@ -98,7 +110,10 @@ class CaffeineViewModel: ObservableObject {
     @discardableResult
     func deactivateSuper() -> Bool {
         guard self.isSuperActive else { return true }
-        guard LidSleepManager.shared.setSleepDisabled(false) else { return false }
+        guard LidSleepManager.shared.setSleepDisabled(false) else {
+            self.superFailure = .notAuthorized
+            return false
+        }
         self.isSuperActive = false
         return true
     }
@@ -165,11 +180,13 @@ class CaffeineViewModel: ObservableObject {
 
     /// Deactivates Caffeine
     func deactivate() {
+        // Any timed session ends here, even if Super cannot be switched off below
+        self.cancelTimers()
+        self.timeRemaining = nil
+
         // Stay active if the system flag could not be restored, so the UI matches reality
         guard self.deactivateSuper() else { return }
 
-        self.cancelTimers()
-        self.timeRemaining = nil
         self.isActive = false
         SleepPreventionManager.shared.allowSleep()
         ActivitySimulator.shared.stopMonitoring()
@@ -280,6 +297,15 @@ class CaffeineViewModel: ObservableObject {
         self.displayTimer?.invalidate()
         self.displayTimer = nil
     }
+}
+
+// MARK: - Super Caffeine Failure
+
+enum SuperCaffeineFailure: Equatable {
+    /// On battery power at or below the configured threshold (percent)
+    case lowBattery(threshold: Int)
+    /// The passwordless sudoers rule for `pmset` is missing
+    case notAuthorized
 }
 
 // MARK: - Preference Keys

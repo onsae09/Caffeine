@@ -6,7 +6,9 @@
 import Foundation
 
 /// Controls the system-wide `pmset disablesleep` flag, which keeps the Mac awake
-/// even when the lid is closed. Changing it requires root privileges.
+/// even when the lid is closed. Changing it requires root privileges, which are obtained
+/// only through a passwordless sudoers rule: an interactive password prompt could block
+/// with the lid closed, at sleep or at quit and leave the flag stuck on.
 final class LidSleepManager {
     static let shared = LidSleepManager()
 
@@ -29,29 +31,21 @@ final class LidSleepManager {
             }
     }
 
-    /// Sets `pmset -a disablesleep`. Tries passwordless sudo first, then falls back
-    /// to the administrator password prompt. Returns `true` if the system now matches `disabled`.
+    /// Terminal command that installs the sudoers rule letting Caffeine run `pmset` without a password
+    var sudoersSetupCommand: String {
+        let rule = "\(NSUserName()) ALL=(root) NOPASSWD: " +
+            "\(self.pmsetPath) -a disablesleep 0, \(self.pmsetPath) -a disablesleep 1"
+        return "echo '\(rule)' > /tmp/caffeine-sudoers && " +
+            "sudo install -m 0440 -o root -g wheel /tmp/caffeine-sudoers /etc/sudoers.d/caffeine"
+    }
+
+    /// Sets `pmset -a disablesleep` through passwordless sudo, never prompting.
+    /// Returns `true` if the system now matches `disabled`.
     @discardableResult
     func setSleepDisabled(_ disabled: Bool) -> Bool {
         let value = disabled ? "1" : "0"
-
-        // Silent path: works if the user added a NOPASSWD sudoers rule for pmset
-        let sudoResult = self.run(self.sudoPath, arguments: ["-n", self.pmsetPath, "-a", "disablesleep", value])
-        if sudoResult.status == 0 {
-            return self.isSleepDisabled() == disabled
-        }
-
-        // Fallback: ask for the administrator password
-        let prompt = String(localized: "Caffeine needs administrator privileges to change lid-closed sleep.")
-            .replacingOccurrences(of: "\"", with: "\\\"")
-        let source =
-            "do shell script \"\(self.pmsetPath) -a disablesleep \(value)\" " +
-            "with prompt \"\(prompt)\" with administrator privileges"
-
-        var error: NSDictionary?
-        NSAppleScript(source: source)?.executeAndReturnError(&error)
-
-        return self.isSleepDisabled() == disabled
+        let result = self.run(self.sudoPath, arguments: ["-n", self.pmsetPath, "-a", "disablesleep", value])
+        return result.status == 0 && self.isSleepDisabled() == disabled
     }
 
     // MARK: - Private Methods

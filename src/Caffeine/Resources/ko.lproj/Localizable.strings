@@ -45,7 +45,11 @@
 /* Super Caffeine */
 "Super Caffeine (lid can be closed)" = "Super Caffeine (덮개를 닫아도 유지)";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine 활성 상태 (덮개를 닫아도 잠자기 안 함)";
-"Caffeine needs administrator privileges to change lid-closed sleep." = "덮개를 닫았을 때의 잠자기 설정을 변경하려면 관리자 권한이 필요합니다.";
 "Turn off Super Caffeine at battery level:" = "Super Caffeine을 끌 배터리 잔량:";
 "Never" = "안 함";
 "While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "배터리 전원 사용 중 잔량이 이 값 이하가 되면 Super Caffeine이 일반 Caffeine으로 돌아갑니다.";
+"Super Caffeine is unavailable" = "Super Caffeine을 사용할 수 없음";
+"The battery is at or below %d%%. Connect a power adapter or change the battery level in Preferences." = "배터리 잔량이 %d%% 이하입니다. 전원 어댑터를 연결하거나 환경설정에서 배터리 잔량 기준을 변경하세요.";
+"Caffeine needs permission to run pmset without a password. Run this command once in Terminal, then try again:" = "Caffeine이 비밀번호 없이 pmset을 실행하려면 권한이 필요합니다. 터미널에서 다음 명령을 한 번 실행한 뒤 다시 시도하세요:";
+"Copy Command" = "명령 복사";
+"OK" = "확인";

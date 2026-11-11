@@ -67,6 +67,16 @@ class MenuBarController: NSObject {
             }
             .store(in: &self.cancellables)
 
+        self.viewModel.$superFailure
+            .compactMap(\.self)
+            .sink { [weak self] failure in
+                // Show after the current click/menu action has finished
+                DispatchQueue.main.async {
+                    self?.showSuperFailureAlert(failure)
+                }
+            }
+            .store(in: &self.cancellables)
+
         self.viewModel.$showPreferences
             .sink { [weak self] show in
                 if show {
@@ -80,7 +90,7 @@ class MenuBarController: NSObject {
         guard let button = statusItem?.button else { return }
 
         if self.viewModel.isSuperActive {
-            button.image = Self.superActiveImage
+            button.image = Self.makeSuperActiveImage(for: button.effectiveAppearance)
         } else {
             let imageName = self.viewModel.isActive ? "active" : "inactive"
             if let image = NSImage(named: NSImage.Name(imageName)) {
@@ -110,9 +120,15 @@ class MenuBarController: NSObject {
     }
 
     /// Full coffee cup with yellow coffee, used for Super Caffeine.
-    /// The cup outline is drawn in the label color at draw time so it follows the menu bar appearance,
-    /// while the coffee stays yellow (a template image would turn it monochrome).
-    private static let superActiveImage: NSImage? = {
+    /// The cup outline uses the label color resolved for `appearance`, while the coffee stays yellow
+    /// (a template image would turn it monochrome). A new image is built for every appearance change
+    /// so AppKit never reuses a representation drawn for the old appearance.
+    private static func makeSuperActiveImage(for appearance: NSAppearance) -> NSImage? {
+        var outlineColor = NSColor.labelColor
+        appearance.performAsCurrentDrawingAppearance {
+            outlineColor = NSColor(cgColor: NSColor.labelColor.cgColor) ?? .labelColor
+        }
+
         guard
             let outline = NSImage(named: NSImage.Name("superActiveOutline")),
             let fill = NSImage(named: NSImage.Name("superActiveFill")) else { return nil }
@@ -128,13 +144,13 @@ class MenuBarController: NSObject {
         }
 
         let image = NSImage(size: outline.size, flipped: false) { bounds in
-            tinted(outline, .labelColor, in: bounds)
+            tinted(outline, outlineColor, in: bounds)
             tinted(fill, .systemYellow, in: bounds)
             return true
         }
         image.isTemplate = false
         return image
-    }()
+    }
 
     @objc
     private func statusItemClicked(_: NSStatusBarButton) {
@@ -266,6 +282,38 @@ class MenuBarController: NSObject {
     @objc
     private func toggleSuper(_: NSMenuItem) {
         self.viewModel.toggleSuper()
+    }
+
+    private func showSuperFailureAlert(_ failure: SuperCaffeineFailure) {
+        self.viewModel.superFailure = nil
+        NSApp.activate(ignoringOtherApps: true)
+
+        let alert = NSAlert()
+        alert.messageText = String(localized: "Super Caffeine is unavailable")
+
+        switch failure {
+        case let .lowBattery(threshold):
+            alert.informativeText = String(
+                format: String(
+                    localized: "The battery is at or below %d%%. Connect a power adapter or change the battery level in Preferences."
+                ),
+                threshold
+            )
+            alert.addButton(withTitle: String(localized: "OK"))
+            alert.runModal()
+
+        case .notAuthorized:
+            let command = LidSleepManager.shared.sudoersSetupCommand
+            alert.informativeText = String(
+                localized: "Caffeine needs permission to run pmset without a password. Run this command once in Terminal, then try again:"
+            ) + "\n\n" + command
+            alert.addButton(withTitle: String(localized: "Copy Command"))
+            alert.addButton(withTitle: String(localized: "OK"))
+            if alert.runModal() == .alertFirstButtonReturn {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(command, forType: .string)
+            }
+        }
     }
 
     @objc

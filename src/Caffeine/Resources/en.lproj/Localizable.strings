@@ -46,7 +46,11 @@
 /* Super Caffeine */
 "Super Caffeine (lid can be closed)" = "Super Caffeine (lid can be closed)";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine is active (lid can be closed)";
-"Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine needs administrator privileges to change lid-closed sleep.";
 "Turn off Super Caffeine at battery level:" = "Turn off Super Caffeine at battery level:";
 "Never" = "Never";
 "While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "While on battery power, Super Caffeine switches back to normal Caffeine at or below this level.";
+"Super Caffeine is unavailable" = "Super Caffeine is unavailable";
+"The battery is at or below %d%%. Connect a power adapter or change the battery level in Preferences." = "The battery is at or below %d%%. Connect a power adapter or change the battery level in Preferences.";
+"Caffeine needs permission to run pmset without a password. Run this command once in Terminal, then try again:" = "Caffeine needs permission to run pmset without a password. Run this command once in Terminal, then try again:";
+"Copy Command" = "Copy Command";
+"OK" = "OK";

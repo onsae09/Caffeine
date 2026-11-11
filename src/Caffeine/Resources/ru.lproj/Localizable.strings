@@ -45,7 +45,11 @@
 /* Super Caffeine */
 "Super Caffeine (lid can be closed)" = "Super Caffeine (можно закрыть крышку)";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine активен (можно закрыть крышку)";
-"Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine требуются права администратора, чтобы изменить режим сна при закрытой крышке.";
 "Turn off Super Caffeine at battery level:" = "Выключать Super Caffeine при заряде:";
 "Never" = "Никогда";
 "While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "При работе от батареи Super Caffeine возвращается в обычный режим Caffeine при этом уровне заряда или ниже.";
+"Super Caffeine is unavailable" = "Super Caffeine недоступен";
+"The battery is at or below %d%%. Connect a power adapter or change the battery level in Preferences." = "Заряд батареи %d%% или ниже. Подключите адаптер питания или измените уровень заряда в настройках.";
+"Caffeine needs permission to run pmset without a password. Run this command once in Terminal, then try again:" = "Caffeine требуется разрешение на запуск pmset без пароля. Выполните эту команду один раз в Терминале и повторите попытку:";
+"Copy Command" = "Скопировать команду";
+"OK" = "ОК";
