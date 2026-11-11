@@ -16,7 +16,12 @@ class CaffeineViewModel: ObservableObject {
 
     @Published var isActive = false
     /// Super Caffeine: also keeps the Mac awake with the lid closed (`pmset disablesleep 1`)
-    @Published var isSuperActive = false
+    @Published var isSuperActive = false {
+        didSet {
+            guard self.isSuperActive != oldValue else { return }
+            self.updateBatteryMonitoring()
+        }
+    }
     @Published var timeRemaining: TimeInterval?
     @Published var showPreferences = false
 
@@ -81,7 +86,10 @@ class CaffeineViewModel: ObservableObject {
     /// Enables sleep prevention with the lid closed. Returns `true` on success.
     @discardableResult
     func activateSuper() -> Bool {
-        guard LidSleepManager.shared.setSleepDisabled(true) else { return false }
+        // Don't keep a closed-lid Mac awake on a nearly empty battery
+        guard
+            !BatteryMonitor.shared.isLowOnBattery,
+            LidSleepManager.shared.setSleepDisabled(true) else { return false }
         self.isSuperActive = true
         return true
     }
@@ -240,6 +248,25 @@ class CaffeineViewModel: ObservableObject {
                 }
             }
             .store(in: &self.cancellables)
+    }
+
+    /// Watches the battery only while Super Caffeine is on
+    private func updateBatteryMonitoring() {
+        guard self.isSuperActive else {
+            BatteryMonitor.shared.stopMonitoring()
+            return
+        }
+
+        BatteryMonitor.shared.startMonitoring { [weak self] in
+            self?.turnOffSuperIfBatteryLow()
+        }
+        self.turnOffSuperIfBatteryLow()
+    }
+
+    /// Drops back to normal Caffeine (lid-closed sleep allowed) when the battery runs low
+    private func turnOffSuperIfBatteryLow() {
+        guard self.isSuperActive, BatteryMonitor.shared.isLowOnBattery else { return }
+        self.deactivateSuper()
     }
 
     private func cancelTimers() {

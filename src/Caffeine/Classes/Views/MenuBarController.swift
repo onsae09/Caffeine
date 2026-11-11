@@ -15,6 +15,7 @@ class MenuBarController: NSObject {
     private var viewModel: CaffeineViewModel
     private var preferencesWindow: NSWindow?
     private var cancellables = Set<AnyCancellable>()
+    private var appearanceObservation: NSKeyValueObservation?
 
     override init() {
         self.viewModel = CaffeineViewModel()
@@ -43,6 +44,13 @@ class MenuBarController: NSObject {
         button.action = #selector(self.statusItemClicked(_:))
         button.target = self
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+
+        self.appearanceObservation = button.observe(\.effectiveAppearance) { [weak self] _, _ in
+            // Appearance changes are delivered on the main thread
+            MainActor.assumeIsolated {
+                self?.updateIcon()
+            }
+        }
 
         button.setAccessibilityLabel("Caffeine")
         button.setAccessibilityIdentifier("MenuBarController.statusItem.button")
@@ -101,29 +109,30 @@ class MenuBarController: NSObject {
         }
     }
 
-    /// Full coffee cup with a lightning bolt next to it, used for Super Caffeine
+    /// Full coffee cup with yellow coffee, used for Super Caffeine.
+    /// The cup outline is drawn in the label color at draw time so it follows the menu bar appearance,
+    /// while the coffee stays yellow (a template image would turn it monochrome).
     private static let superActiveImage: NSImage? = {
-        guard let cup = NSImage(named: NSImage.Name("active")) else { return nil }
+        guard
+            let outline = NSImage(named: NSImage.Name("superActiveOutline")),
+            let fill = NSImage(named: NSImage.Name("superActiveFill")) else { return nil }
 
-        let boltConfig = NSImage.SymbolConfiguration(pointSize: 11, weight: .bold)
-        let bolt = NSImage(systemSymbolName: "bolt.fill", accessibilityDescription: nil)?
-            .withSymbolConfiguration(boltConfig)
-
-        let boltSize = bolt?.size ?? .zero
-        let size = NSSize(width: cup.size.width + boltSize.width + 1, height: cup.size.height)
-
-        let image = NSImage(size: size, flipped: false) { _ in
-            cup.draw(in: NSRect(origin: .zero, size: cup.size))
-            if let bolt {
-                let origin = NSPoint(
-                    x: cup.size.width + 1,
-                    y: (size.height - boltSize.height) / 2
-                )
-                bolt.draw(in: NSRect(origin: origin, size: boltSize))
+        func tinted(_ mask: NSImage, _ color: NSColor, in rect: NSRect) {
+            let layer = NSImage(size: rect.size, flipped: false) { bounds in
+                mask.draw(in: bounds)
+                color.setFill()
+                bounds.fill(using: .sourceAtop)
+                return true
             }
+            layer.draw(in: rect)
+        }
+
+        let image = NSImage(size: outline.size, flipped: false) { bounds in
+            tinted(outline, .labelColor, in: bounds)
+            tinted(fill, .systemYellow, in: bounds)
             return true
         }
-        image.isTemplate = true
+        image.isTemplate = false
         return image
     }()
 
