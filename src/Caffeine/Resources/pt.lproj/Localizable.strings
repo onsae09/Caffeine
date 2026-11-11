@@ -46,3 +46,6 @@
 "Super Caffeine (lid can be closed)" = "Super Caffeine (pode fechar a tampa)";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine está ativo (pode fechar a tampa)";
 "Caffeine needs administrator privileges to change lid-closed sleep." = "O Caffeine precisa de privilégios de administrador para alterar a suspensão com a tampa fechada.";
+"Turn off Super Caffeine at battery level:" = "Desativar o Super Caffeine com bateria a:";
+"Never" = "Nunca";
+"While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "Com bateria, o Super Caffeine volta ao Caffeine normal quando a carga atinge este nível ou menos.";

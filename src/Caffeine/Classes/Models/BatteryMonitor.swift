@@ -11,8 +11,14 @@ import IOKit.ps
 final class BatteryMonitor {
     static let shared = BatteryMonitor()
 
-    /// Battery percentage at or below which Super Caffeine is turned off while on battery power
-    static let lowBatteryThreshold = 20
+    /// Default battery percentage at or below which Super Caffeine is turned off while on battery power
+    static let defaultLowBatteryThreshold = 20
+
+    /// User-configured threshold in percent; 0 disables the battery guard
+    static var lowBatteryThreshold: Int {
+        UserDefaults.standard.object(forKey: PreferenceKeys.superBatteryThreshold) as? Int
+            ?? Self.defaultLowBatteryThreshold
+    }
 
     private var runLoopSource: CFRunLoopSource?
     private var onChange: (() -> Void)?
@@ -23,7 +29,9 @@ final class BatteryMonitor {
 
     /// Whether the Mac is on battery power with a charge at or below `lowBatteryThreshold`
     var isLowOnBattery: Bool {
+        let threshold = Self.lowBatteryThreshold
         guard
+            threshold > 0,
             let info = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
             let sources = IOPSCopyPowerSourcesList(info)?.takeRetainedValue() as? [CFTypeRef] else { return false }
 
@@ -37,7 +45,7 @@ final class BatteryMonitor {
                 let max = description[kIOPSMaxCapacityKey] as? Int,
                 max > 0 else { continue }
 
-            return current * 100 / max <= Self.lowBatteryThreshold
+            return current * 100 / max <= threshold
         }
         return false
     }

@@ -263,6 +263,11 @@ class CaffeineViewModel: ObservableObject {
         self.turnOffSuperIfBatteryLow()
     }
 
+    /// Re-evaluates the battery guard after the threshold preference changes
+    func batteryThresholdDidChange() {
+        self.turnOffSuperIfBatteryLow()
+    }
+
     /// Drops back to normal Caffeine (lid-closed sleep allowed) when the battery runs low
     private func turnOffSuperIfBatteryLow() {
         guard self.isSuperActive, BatteryMonitor.shared.isLowOnBattery else { return }
@@ -285,4 +290,5 @@ enum PreferenceKeys {
     static let suppressLaunchMessage = "CASuppressLaunchMessage"
     static let deactivateOnManualSleep = "CADeactivateOnManualSleep"
     static let keepAppsActive = "CAKeepAppsActive"
+    static let superBatteryThreshold = "CASuperBatteryThreshold"
 }

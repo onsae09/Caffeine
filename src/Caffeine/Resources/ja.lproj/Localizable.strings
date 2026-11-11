@@ -47,3 +47,6 @@
 "Super Caffeine (lid can be closed)" = "Super Caffeine（蓋を閉じても維持）";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine が有効です（蓋を閉じても維持）";
 "Caffeine needs administrator privileges to change lid-closed sleep." = "蓋を閉じたときのスリープ設定を変更するには管理者権限が必要です。";
+"Turn off Super Caffeine at battery level:" = "Super Caffeine をオフにするバッテリー残量:";
+"Never" = "しない";
+"While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "バッテリー駆動中に残量がこの値以下になると、Super Caffeine は通常の Caffeine に戻ります。";

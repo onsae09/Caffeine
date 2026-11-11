@@ -47,3 +47,6 @@
 "Super Caffeine (lid can be closed)" = "Super Caffeine (можна закрити кришку)";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine активний (можна закрити кришку)";
 "Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine потребує прав адміністратора, щоб змінити режим сну при закритій кришці.";
+"Turn off Super Caffeine at battery level:" = "Вимикати Super Caffeine при заряді:";
+"Never" = "Ніколи";
+"While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "Під час роботи від батареї Super Caffeine повертається до звичайного Caffeine при цьому рівні заряду або нижче.";

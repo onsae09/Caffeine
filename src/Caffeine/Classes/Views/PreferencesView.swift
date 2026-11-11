@@ -14,6 +14,10 @@ struct PreferencesView: View {
     @AppStorage(PreferenceKeys.suppressLaunchMessage) private var suppressLaunchMessage = false
     @AppStorage(PreferenceKeys.deactivateOnManualSleep) private var deactivateOnManualSleep = false
     @AppStorage(PreferenceKeys.keepAppsActive) private var keepAppsActive = false
+    @AppStorage(PreferenceKeys.superBatteryThreshold) private var superBatteryThreshold = BatteryMonitor
+        .defaultLowBatteryThreshold
+
+    private let batteryThresholds = [10, 20, 30, 40, 50]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -102,6 +106,40 @@ struct PreferencesView: View {
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
                     .padding(.leading, 20)
+
+                Divider()
+                    .padding(.vertical, 4)
+                    .accessibilityHidden(true)
+
+                // Super Caffeine battery guard
+                HStack(spacing: 8) {
+                    Text("Turn off Super Caffeine at battery level:")
+                        .font(.system(size: 13))
+
+                    Picker("Turn off Super Caffeine at battery level:", selection: Binding(
+                        get: { self.superBatteryThreshold },
+                        set: { newValue in
+                            self.superBatteryThreshold = newValue
+                            self.viewModel.batteryThresholdDidChange()
+                        }
+                    )) {
+                        ForEach(self.batteryThresholds, id: \.self) { percent in
+                            Text(verbatim: "\(percent)%").tag(percent)
+                        }
+                        Text("Never").tag(0)
+                    }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
+                    .frame(width: 120)
+                    .accessibilityIdentifier("PreferencesView.superBatteryThresholdPicker")
+
+                    Spacer()
+                }
+
+                Text("While on battery power, Super Caffeine switches back to normal Caffeine at or below this level.")
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             Spacer()

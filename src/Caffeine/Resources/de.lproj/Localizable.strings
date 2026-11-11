@@ -47,3 +47,6 @@
 "Super Caffeine (lid can be closed)" = "Super Caffeine (Deckel darf geschlossen werden)";
 "Super Caffeine is active (lid can be closed)" = "Super Caffeine ist aktiv (Deckel darf geschlossen werden)";
 "Caffeine needs administrator privileges to change lid-closed sleep." = "Caffeine benötigt Administratorrechte, um den Ruhezustand bei geschlossenem Deckel zu ändern.";
+"Turn off Super Caffeine at battery level:" = "Super Caffeine ausschalten bei Akkustand:";
+"Never" = "Nie";
+"While on battery power, Super Caffeine switches back to normal Caffeine at or below this level." = "Im Akkubetrieb wechselt Super Caffeine bei oder unter diesem Akkustand zurück zu normalem Caffeine.";
